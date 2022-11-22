@@ -12,10 +12,27 @@ inputs:
   git-token:
     description: "GIT Token to use when checking out and commiting"
     required: true
+  slack-token:
+    description: "Slack token for notifications"
+    required: true
+  slack-channel:
+    description: "Slack channel to publish to"
+    required: true
     
 runs:
   using: "composite"
   steps:
+    - name: Prepare
+      uses: saucal/action-slack-notification@main
+      with:
+        token: ${{ inputs.slack-token }}
+        channel: ${{ inputs.slack-channel }}
+        status: 'Preparing :loading:'
+        commit-repo: ${{ github.repository }}
+        commit-branch: ${{ github.ref_name }}
+        commit-author: ${{ github.triggering_actor }}
+        commit-message: "..."
+
     - name: Ensure Repo Exists
       id: repo-check
       uses: saucal/action-maybe-create-repo@main
@@ -28,6 +45,11 @@ runs:
       with:
         path: ${{ inputs.source }}
         token: ${{ inputs.git-token }}
+
+    - name: Set message
+      uses: saucal/action-slack-notification@main
+      with:
+        commit-message: ${{ steps.checkout.outputs.message }}
 
     - name: Checkout previous build (if any)
       id: 'checkout-built'
@@ -47,3 +69,8 @@ runs:
       with:
         path: ${{ inputs.source }}
         from: ${{ inputs.built }}
+
+    - name: Set message
+      uses: saucal/action-slack-notification@main
+      with:
+        status: "Building :large_yellow_circle:"
