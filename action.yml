@@ -1,0 +1,49 @@
+name: "Prepare Deploy"
+description: "Bundle action to prepare the build process"
+inputs:
+  source:
+    description: "Source directory"
+    required: false
+    default: 'source'
+  built:
+    description: "Previous build directory"
+    required: false
+    default: 'built'
+  git-token:
+    description: "GIT Token to use when checking out and commiting"
+    required: true
+    
+runs:
+  using: "composite"
+  steps:
+    - name: Ensure Repo Exists
+      id: repo-check
+      uses: saucal/action-maybe-create-repo@main
+      with:
+        token: ${{ inputs.git-token }}
+
+    - name: Checkout
+      id: 'checkout'
+      uses: saucal/action-checkout-extended@main
+      with:
+        path: ${{ inputs.source }}
+        token: ${{ inputs.git-token }}
+
+    - name: Checkout previous build (if any)
+      id: 'checkout-built'
+      uses: saucal/action-checkout-extended@main
+      with:
+        repo: "${{ steps.repo-check.outputs.repo }}"
+        use: "${{ github.ref_name }}"
+        path: ${{ inputs.built }}
+        token: ${{ inputs.git-token }}
+        use-cn: "${{ steps.checkout.outputs.cn }}"
+        use-ce: "${{ steps.checkout.outputs.ce }}"
+        use-an: "${{ steps.checkout.outputs.an }}"
+        use-ae: "${{ steps.checkout.outputs.ae }}"
+
+    - name: Prepare Composer
+      uses: saucal/action-prepare-composer@main
+      with:
+        path: ${{ inputs.source }}
+        from: ${{ inputs.built }}
