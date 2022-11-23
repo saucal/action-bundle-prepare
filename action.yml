@@ -12,6 +12,14 @@ inputs:
   git-token:
     description: "GIT Token to use when checking out and commiting"
     required: true
+  repo:
+    description: "owner/repo (github only)"
+    required: false
+    default: 'current-built'
+  branch:
+    description: "branch to deploy to"
+    required: false
+    default: '${{ github.ref_name }}'
   slack-token:
     description: "Slack token for notifications"
     required: true
@@ -34,10 +42,21 @@ runs:
         commit-message: "..."
 
     - name: Ensure Repo Exists
+      if: ${{ inputs.repo == 'current-built' }}
       id: repo-check
       uses: saucal/action-maybe-create-repo@main
       with:
         token: ${{ inputs.git-token }}
+
+    - name: Define repo to use
+      id: repo-load
+      shell: bash
+      run: |
+        if [ "${{ inputs.repo }}" == "current-built" ]; then
+          echo "repo=${{ steps.repo-check.outputs.repo }}" >> $GITHUB_OUTPUT
+        else
+          echo "repo=${{ inputs.repo }}" >> $GITHUB_OUTPUT
+        fi
 
     - name: Checkout
       id: 'checkout'
@@ -55,8 +74,8 @@ runs:
       id: 'checkout-built'
       uses: saucal/action-checkout-extended@main
       with:
-        repo: "${{ steps.repo-check.outputs.repo }}"
-        use: "${{ github.ref_name }}"
+        repo: "${{ steps.repo-load.outputs.repo }}"
+        use: "${{ inputs.branch }}"
         path: ${{ inputs.built }}
         token: ${{ inputs.git-token }}
         use-cn: "${{ steps.checkout.outputs.cn }}"
