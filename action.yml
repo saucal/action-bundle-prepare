@@ -31,7 +31,7 @@ runs:
   using: "composite"
   steps:
     - name: Prepare
-      uses: saucal/action-slack-notification@main
+      uses: saucal/action-slack-notification@v1
       with:
         token: ${{ inputs.slack-token }}
         channel: ${{ inputs.slack-channel }}
@@ -44,7 +44,7 @@ runs:
     - name: Ensure Repo Exists
       if: ${{ inputs.repo == 'current-built' }}
       id: repo-check
-      uses: saucal/action-maybe-create-repo@main
+      uses: saucal/action-maybe-create-repo@v1
       with:
         token: ${{ inputs.git-token }}
 
@@ -60,19 +60,19 @@ runs:
 
     - name: Checkout
       id: 'checkout'
-      uses: saucal/action-checkout-extended@main
+      uses: saucal/action-checkout-extended@v2
       with:
         path: ${{ inputs.source }}
         token: ${{ inputs.git-token }}
 
     - name: Set message
-      uses: saucal/action-slack-notification@main
+      uses: saucal/action-slack-notification@v1
       with:
         commit-message: ${{ steps.checkout.outputs.message }}
 
     - name: Checkout previous build (if any)
       id: 'checkout-built'
-      uses: saucal/action-checkout-extended@main
+      uses: saucal/action-checkout-extended@v2
       with:
         repo: "${{ steps.repo-load.outputs.repo }}"
         use: "${{ inputs.branch }}"
@@ -84,12 +84,12 @@ runs:
         use-ae: "${{ steps.checkout.outputs.ae }}"
 
     - name: Prepare Composer
-      uses: saucal/action-prepare-composer@main
+      uses: saucal/action-prepare-composer@v1
       with:
         path: ${{ inputs.source }}
         from: ${{ inputs.built }}
 
     - name: Set message
-      uses: saucal/action-slack-notification@main
+      uses: saucal/action-slack-notification@v1
       with:
         status: "Building :large_yellow_circle:"
