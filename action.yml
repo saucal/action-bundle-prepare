@@ -83,6 +83,12 @@ runs:
         use-an: "${{ steps.checkout.outputs.an }}"
         use-ae: "${{ steps.checkout.outputs.ae }}"
 
+    - name: Prepare MU Plugins
+      uses: saucal/action-prepare-mu-plugins@main
+      with:
+        path: ${{ inputs.source }}
+        git-token: ${{ inputs.git-token }}
+
     - name: Prepare Composer
       uses: saucal/action-prepare-composer@v1
       with:
