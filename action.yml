@@ -26,7 +26,11 @@ inputs:
   slack-channel:
     description: "Slack channel to publish to"
     required: true
-    
+  add-mu-plugins:
+    description: "Whether or not to add our MU-Plugins"
+    required: false
+    default: "auto"
+
 runs:
   using: "composite"
   steps:
@@ -88,6 +92,7 @@ runs:
       with:
         path: ${{ inputs.source }}
         git-token: ${{ inputs.git-token }}
+        add-mu-plugins: ${{ inputs.add-mu-plugins }}
 
     - name: Prepare Composer
       uses: saucal/action-prepare-composer@v1
