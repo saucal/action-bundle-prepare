@@ -26,6 +26,10 @@ inputs:
   slack-channel:
     description: "Slack channel to publish to"
     required: true
+  is-full-site:
+    description: "Whether the site being prepared is a full site repo, or not (single plugin or theme)"
+    required: false
+    default: "auto"
   add-mu-plugins:
     description: "Whether or not to add our MU-Plugins"
     required: false
@@ -73,6 +77,20 @@ runs:
         path: ${{ inputs.source }}
         token: ${{ inputs.git-token }}
 
+    - name: Define repo to use
+      id: repo-is-full
+      shell: bash
+      run: |
+        if [ "${{ inputs.is-full-site }}" == "auto" ]; then
+          if [ -d "${{ inputs.source }}/themes" ] || [ -d "${{ inputs.source }}/plugins" ]; then
+            echo "state=true" >> $GITHUB_OUTPUT
+          else
+            echo "state=false" >> $GITHUB_OUTPUT
+          fi
+        else
+          echo "state=${{ inputs.is-full-site }}" >> $GITHUB_OUTPUT
+        fi
+
     - name: Set message
       uses: saucal/action-slack-notification@v1
       with:
@@ -93,6 +111,7 @@ runs:
 
     - name: Prepare MU Plugins
       uses: saucal/action-prepare-mu-plugins@main
+      if: ${{ steps.repo-is-full.outputs.state == 'true' }}
       with:
         path: ${{ inputs.source }}
         git-token: ${{ inputs.git-token }}
@@ -101,6 +120,7 @@ runs:
 
     - name: Prepare Composer
       uses: saucal/action-prepare-composer@v1
+      if: ${{ steps.repo-is-full.outputs.state == 'true' }}
       with:
         path: ${{ inputs.source }}
         from: ${{ inputs.built }}
