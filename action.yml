@@ -108,6 +108,7 @@ runs:
         use-ce: "${{ steps.checkout.outputs.ce }}"
         use-an: "${{ steps.checkout.outputs.an }}"
         use-ae: "${{ steps.checkout.outputs.ae }}"
+        continue-on-error: "true"
 
     - name: Prepare MU Plugins
       uses: saucal/action-prepare-mu-plugins@main
