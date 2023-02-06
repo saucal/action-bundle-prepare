@@ -38,6 +38,10 @@ inputs:
     description: "The path to use for MU-Plugins"
     required: false
     default: "mu-plugins"
+  mu-plugins-branch:
+    description: "The branch to use for MU-Plugins"
+    required: false
+    default: "main"
 
 runs:
   using: "composite"
@@ -118,6 +122,7 @@ runs:
         git-token: ${{ inputs.git-token }}
         add-mu-plugins: ${{ inputs.add-mu-plugins }}
         mu-plugins-path: ${{ inputs.mu-plugins-path }}
+        mu-branch: ${{ inputs.mu-plugins-branch }}
 
     - name: Prepare Composer
       uses: saucal/action-prepare-composer@v1
