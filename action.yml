@@ -50,7 +50,7 @@ runs:
   steps:
     - name: Prepare
       if: ${{ inputs.slack-token != '' }}
-      uses: saucal/action-slack-notification@test
+      uses: saucal/action-slack-notification@v1
       with:
         token: ${{ inputs.slack-token }}
         channel: ${{ inputs.slack-channel }}
@@ -99,7 +99,7 @@ runs:
         fi
 
     - name: Set message
-      uses: saucal/action-slack-notification@test
+      uses: saucal/action-slack-notification@v1
       with:
         commit-message: ${{ steps.checkout.outputs.message }}
 
@@ -135,6 +135,6 @@ runs:
         from: ${{ inputs.built }}
 
     - name: Set message
-      uses: saucal/action-slack-notification@test
+      uses: saucal/action-slack-notification@v1
       with:
         status: "Building :large_yellow_circle:"
