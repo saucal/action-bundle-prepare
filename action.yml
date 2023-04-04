@@ -22,10 +22,12 @@ inputs:
     default: '${{ github.ref_name }}'
   slack-token:
     description: "Slack token for notifications"
-    required: true
+    required: false
+    default: ""
   slack-channel:
     description: "Slack channel to publish to"
-    required: true
+    required: false
+    default: ""
   is-full-site:
     description: "Whether the site being prepared is a full site repo, or not (single plugin or theme)"
     required: false
@@ -47,6 +49,7 @@ runs:
   using: "composite"
   steps:
     - name: Prepare
+      if: ${{ inputs.slack-token != '' }}
       uses: saucal/action-slack-notification@v1
       with:
         token: ${{ inputs.slack-token }}
