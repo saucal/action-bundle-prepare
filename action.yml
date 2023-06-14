@@ -59,6 +59,7 @@ runs:
         token: ${{ inputs.slack-token }}
         channel: ${{ inputs.slack-channel }}
         heading: ${{ github.workflow }}
+        action-url: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         status: 'Preparing :loading:'
         commit-repo: ${{ github.repository }}
         commit-branch: ${{ github.ref_name }}
