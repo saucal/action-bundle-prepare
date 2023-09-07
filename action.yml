@@ -125,7 +125,7 @@ runs:
         continue-on-error: "true"
 
     - name: Prepare MU Plugins
-      uses: saucal/action-prepare-mu-plugins@feature/platform-mu-plugins
+      uses: saucal/action-prepare-mu-plugins@v2
       if: ${{ steps.repo-is-full.outputs.state == 'true' }}
       with:
         path: ${{ inputs.source }}
