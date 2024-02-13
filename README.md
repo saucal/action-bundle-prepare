@@ -66,7 +66,7 @@ If you're deploying to a WP VIP environment (GIT based) you'd do something like 
     mu-plugins-path: 'mu-plugins'
 
     # The branch to use for our mu-plugins.
-    mu-plugins-branch: 'develop'
+    mu-plugins-branch: 'v2'
 
     # Whether to exclude or not outside collaborators from built repo.
     exclude-outside-collaborators: true
