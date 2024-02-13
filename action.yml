@@ -43,7 +43,7 @@ inputs:
   mu-plugins-branch:
     description: "The branch to use for MU-Plugins"
     required: false
-    default: "develop"
+    default: "v2"
   exclude-outside-collaborators:
     description: "Exclude outside collaborators from built repo"
     required: false

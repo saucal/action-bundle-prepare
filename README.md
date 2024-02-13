@@ -55,4 +55,19 @@ If you're deploying to a WP VIP environment (GIT based) you'd do something like 
 
     # Slack channel to post to use when posting to Slack
     slack-channel: ""
+
+    # Whether the repo is a full project or just a plugin or theme. When auto is provided, action evaluates this on its own.
+    is-full-site: 'auto'
+
+    # Whether our mu-plugins need to be added. When auto is provided, action evaluates this on its own.
+    add-mu-plugins: 'auto'
+
+    # In which directory to place our mu-plugins.
+    mu-plugins-path: 'mu-plugins'
+
+    # The branch to use for our mu-plugins.
+    mu-plugins-branch: 'v2'
+
+    # Whether to exclude or not outside collaborators from built repo.
+    exclude-outside-collaborators: true
 ```
