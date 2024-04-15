@@ -135,7 +135,7 @@ runs:
         mu-branch: ${{ inputs.mu-plugins-branch }}
 
     - name: Prepare Composer
-      uses: saucal/action-prepare-composer@v2
+      uses: saucal/action-prepare-composer@v3
       if: ${{ steps.repo-is-full.outputs.state == 'true' }}
       with:
         path: ${{ inputs.source }}
