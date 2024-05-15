@@ -44,6 +44,10 @@ inputs:
     description: "The branch to use for MU-Plugins"
     required: false
     default: "v2"
+  mu-plugins-loader-branch:
+    description: "The MU Plugins loader repo branch"
+    required: false
+    default: "v1"
   exclude-outside-collaborators:
     description: "Exclude outside collaborators from built repo"
     required: false
@@ -133,6 +137,7 @@ runs:
         add-mu-plugins: ${{ inputs.add-mu-plugins }}
         mu-plugins-path: ${{ inputs.mu-plugins-path }}
         mu-branch: ${{ inputs.mu-plugins-branch }}
+        mu-plugins-loader-branch: ${{ inputs.mu-plugins-loader-branch }}
 
     - name: Prepare Composer
       uses: saucal/action-prepare-composer@v3
