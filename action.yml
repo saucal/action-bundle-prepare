@@ -32,6 +32,10 @@ inputs:
     description: "Whether the site being prepared is a full site repo, or not (single plugin or theme)"
     required: false
     default: "auto"
+  wp-content-prefix:
+    description: "wp-content prefix to use if not auto-detected"
+    required: false
+    default: ""
   add-mu-plugins:
     description: "Whether or not to add our MU-Plugins"
     required: false
@@ -101,13 +105,30 @@ runs:
       run: |
         if [ "${{ inputs.is-full-site }}" == "auto" ]; then
           if [ -d "${{ inputs.source }}/themes" ] || [ -d "${{ inputs.source }}/plugins" ]; then
-            echo "state=true" >> $GITHUB_OUTPUT
+            state=true
+            prefix=""
+          elif [ -d "${{ inputs.source }}/wp-content/themes" ] || [ -d "${{ inputs.source }}/wp-content/plugins" ]; then
+            state=true
+            prefix="wp-content"
           else
-            echo "state=false" >> $GITHUB_OUTPUT
+            state=false
+            prefix=""
           fi
         else
-          echo "state=${{ inputs.is-full-site }}" >> $GITHUB_OUTPUT
+          state="${{ inputs.is-full-site }}"
+          prefix="${{ inputs.wp-content-prefix }}"
         fi
+
+        # If we have a prefix, ensure it ends with a slash
+        if [ -n "$prefix" ]; then
+          # Ensure no leading or trailing slashes
+          prefix="${prefix#/}"
+          prefix="${prefix%/}"
+          # Add trailing slash
+          prefix="$prefix/"
+        fi
+        echo "state=$state" >> $GITHUB_OUTPUT
+        echo "prefix=$prefix" >> $GITHUB_OUTPUT
 
     - name: Set message
       uses: saucal/action-slack-notification@v1
@@ -135,7 +156,7 @@ runs:
         path: ${{ inputs.source }}
         git-token: ${{ inputs.git-token }}
         add-mu-plugins: ${{ inputs.add-mu-plugins }}
-        mu-plugins-path: ${{ inputs.mu-plugins-path }}
+        mu-plugins-path: ${{ steps.repo-is-full.outputs.prefix }}${{ inputs.mu-plugins-path }}
         mu-branch: ${{ inputs.mu-plugins-branch }}
         mu-plugins-loader-branch: ${{ inputs.mu-plugins-loader-branch }}
 
