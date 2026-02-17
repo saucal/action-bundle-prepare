@@ -56,6 +56,10 @@ inputs:
     description: "Exclude outside collaborators from built repo"
     required: false
     default: "true"
+  skip-permissions-sync:
+    description: "Skip permissions sync between source and built repo"
+    required: false
+    default: "false"
 
 runs:
   using: "composite"
@@ -81,6 +85,7 @@ runs:
       with:
         token: ${{ inputs.git-token }}
         exclude-outside-collaborators: ${{ inputs.exclude-outside-collaborators }}
+        skip-permissions-sync: ${{ inputs.skip-permissions-sync }}
 
     - name: Define repo to use
       id: repo-load
