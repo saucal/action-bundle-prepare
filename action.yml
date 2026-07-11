@@ -12,6 +12,10 @@ inputs:
   git-token:
     description: "GIT Token to use when checking out and commiting"
     required: true
+  satis_key:
+    description: "SatisPress key (packages.saucal.com), forwarded to prepare-composer to configure composer auth in the source dir."
+    required: false
+    default: ''
   repo:
     description: "owner/repo (github only)"
     required: false
@@ -171,6 +175,7 @@ runs:
       with:
         path: ${{ inputs.source }}
         from: ${{ inputs.built }}
+        satis_key: ${{ inputs.satis_key }}
 
     - name: Set message
       uses: saucal/action-slack-notification@v1
