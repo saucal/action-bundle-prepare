@@ -12,6 +12,10 @@ inputs:
   git-token:
     description: "GIT Token to use when checking out and commiting"
     required: true
+  source-ref:
+    description: "Commit to check out as the source (default: the commit that triggered the run). Lets a consistency self-heal build its reconciliation branch through this same pipeline."
+    required: false
+    default: ''
   satis_key:
     description: "SatisPress key (packages.saucal.com), forwarded to prepare-composer to configure composer auth in the source dir."
     required: false
@@ -107,6 +111,7 @@ runs:
       with:
         path: ${{ inputs.source }}
         token: ${{ inputs.git-token }}
+        use: ${{ inputs.source-ref || 'current' }}
 
     - name: Define repo to use
       id: repo-is-full
